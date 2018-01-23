@@ -9,6 +9,7 @@ import android.text.method.ScrollingMovementMethod
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -28,6 +29,9 @@ class MainActivity : AppCompatActivity() {
 
         // Needed for scrolling.
         mTextView.movementMethod = ScrollingMovementMethod();
+
+        // Need to see if this keeps the screen from scrolling when using the keyboard.
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         // Wires on button.
         testButton.setOnClickListener { view ->
