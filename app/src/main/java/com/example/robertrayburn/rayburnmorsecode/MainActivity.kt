@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         mTextView.movementMethod = ScrollingMovementMethod();
 
         // Need to see if this keeps the screen from scrolling when using the keyboard.
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         // Wires on button.
         testButton.setOnClickListener { view ->
