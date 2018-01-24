@@ -10,27 +10,28 @@
 
     <TextView
         android:id="@+id/TextView"
-        android:layout_width="42dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="51dp"
+        android:layout_width="40dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:text="Text:"
-        app:layout_constraintBottom_toTopOf="@+id/testButton"
-        app:layout_constraintStart_toStartOf="@+id/inputText"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/inputText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:ems="10"
         android:hint="Enter Text Here"
         android:inputType="text"
         android:singleLine="true"
         app:layout_constraintBottom_toTopOf="@+id/testButton"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/TextView"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
         android:id="@+id/testButton"
