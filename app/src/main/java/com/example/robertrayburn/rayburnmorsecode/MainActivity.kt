@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
 
         // Wires on button.
         testButton.setOnClickListener { _ ->
+            mTextView.text = ""
             appendTextAndScroll(inputText.text.toString());
             hideKeyboard();
         }
@@ -46,6 +47,7 @@ class MainActivity : AppCompatActivity() {
         loadFile();
 
         codesButton.setOnClickListener{ _ ->
+            mTextView.text = ""
             for (key in text_dictionary.keys.sorted()) {
                 appendTextAndScroll(key.toUpperCase() + ": " + text_dictionary[key]);
             }
