@@ -14,8 +14,12 @@ import android.view.inputmethod.InputMethodManager
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
+
+    val text_dictionary : HashMap<String,String> = HashMap<String,String>();
+    val morse_dictionary : HashMap<String,String> = HashMap<String,String>();
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,10 +38,20 @@ class MainActivity : AppCompatActivity() {
         //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         // Wires on button.
-        testButton.setOnClickListener { view ->
+        testButton.setOnClickListener { _ ->
             appendTextAndScroll(inputText.text.toString());
             hideKeyboard();
         }
+
+        loadFile();
+
+        codesButton.setOnClickListener{ _ ->
+            for (key in text_dictionary.keys.sorted()) {
+                appendTextAndScroll(key.toUpperCase() + ": " + text_dictionary[key]);
+            }
+            hideKeyboard()
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -78,4 +92,23 @@ class MainActivity : AppCompatActivity() {
         val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0);
     }
+
+    fun loadFile() {
+        // for loading json file into string.
+        //
+        val jsonString: String = application.assets.open("morse.json").bufferedReader().use{
+            it.readText()
+        }
+
+        // Converting json stirng into json object
+        val json_object = JSONObject(jsonString)
+
+        // Storing key/value pairs into hashmaps.
+        // https://stackoverflow.com/questions/9151619/how-to-iterate-over-a-jsonobject
+        for (key in json_object.keys()) {
+            text_dictionary.put(key,json_object.getString(key))
+            morse_dictionary.put(json_object.getString(key),key)
+        }
+    }
+
 }
