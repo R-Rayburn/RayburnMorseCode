@@ -97,7 +97,8 @@ class MainActivity : AppCompatActivity() {
 
     fun loadFile() {
         // for loading json file into string.
-        //
+        // Discussed with Lukas Saul on getting this to work.
+        // Found example here: https://www.youtube.com/watch?v=o5pDghyRHmI
         val jsonString: String = application.assets.open("morse.json").bufferedReader().use{
             it.readText()
         }
