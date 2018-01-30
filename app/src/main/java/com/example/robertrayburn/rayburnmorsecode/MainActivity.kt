@@ -46,12 +46,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         //loadFile();
+        val jsonObj = loadMorseJSONFile();
+
+        buildDictsWithJSON(jsonObj)
 
         codesButton.setOnClickListener{ _ ->
             mTextView.text = ""
-            for (key in text_dictionary.keys.sorted()) {
+            showCodes()
+           /* for (key in text_dictionary.keys.sorted()) {
                 appendTextAndScroll(key.toUpperCase() + ": " + text_dictionary[key])
-            }
+            }*/
             hideKeyboard()
         }
 
@@ -138,7 +142,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showCodes() {
-
+        appendTextAndScroll("HERE ARE THE CODES")
+        for (key in text_dictionary.keys.sorted()){
+            appendTextAndScroll("${key.toUpperCase()}: ${text_dictionary[key]}")
+        }
     }
 
 }
