@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.text.method.ScrollingMovementMethod
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -18,8 +19,8 @@ import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
 
-    val text_dictionary : HashMap<String,String> = HashMap<String,String>();
-    val morse_dictionary : HashMap<String,String> = HashMap<String,String>();
+    val text_dictionary : HashMap<String,String> = HashMap<String,String>()
+    val morse_dictionary : HashMap<String,String> = HashMap<String,String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Needed for scrolling.
-        mTextView.movementMethod = ScrollingMovementMethod();
+        mTextView.movementMethod = ScrollingMovementMethod()
 
         // Need to see if this keeps the screen from scrolling when using the keyboard.
         // getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -40,16 +41,16 @@ class MainActivity : AppCompatActivity() {
         // Wires on button.
         testButton.setOnClickListener { _ ->
             mTextView.text = ""
-            appendTextAndScroll(inputText.text.toString());
-            hideKeyboard();
+            appendTextAndScroll(inputText.text.toString())
+            hideKeyboard()
         }
 
-        loadFile();
+        //loadFile();
 
         codesButton.setOnClickListener{ _ ->
             mTextView.text = ""
             for (key in text_dictionary.keys.sorted()) {
-                appendTextAndScroll(key.toUpperCase() + ": " + text_dictionary[key]);
+                appendTextAndScroll(key.toUpperCase() + ": " + text_dictionary[key])
             }
             hideKeyboard()
         }
@@ -74,32 +75,41 @@ class MainActivity : AppCompatActivity() {
 
     private fun appendTextAndScroll(text: String){
         if (mTextView != null){
-            mTextView.append(text + "\n");
-            val layout = mTextView.getLayout();
+            mTextView.append(text + "\n")
+            val layout = mTextView.getLayout()
             if (layout != null) {
                 val scrollDelta = (layout!!.getLineBottom(  mTextView.getLineCount() - 1)
-                        - mTextView.getScrollY() - mTextView.getHeight());
+                        - mTextView.getScrollY() - mTextView.getHeight())
                 if (scrollDelta > 0)
-                    mTextView.scrollBy( 0, scrollDelta);
+                    mTextView.scrollBy( 0, scrollDelta)
             }
 
         }
     }
 
     fun Activity.hideKeyboard(){
-        hideKeyboard(if (currentFocus == null) View(this) else currentFocus);
+        hideKeyboard(if (currentFocus == null) View(this) else currentFocus)
     }
 
     fun Context.hideKeyboard(view: View){
         val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0);
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    fun loadFile() {
+    fun loadMorseJSONFile() : JSONObject {
+
+        val filePath = "morse.json"
+
+        val jsonStr = application.assets.open(filePath).bufferedReader().use { it.readText() }
+
+        val jsonObj = JSONObject(jsonStr.substring(jsonStr.indexOf("{"), jsonStr.lastIndexOf("}") + 1))
+
+        return jsonObj
+
         // for loading json file into string.
         // Discussed with Lukas Saul on getting this to work.
         // Found example here: https://www.youtube.com/watch?v=o5pDghyRHmI
-        val jsonString: String = application.assets.open("morse.json").bufferedReader().use{
+        /*val jsonString: String = application.assets.open("morse.json").bufferedReader().use{
             it.readText()
         }
 
@@ -111,7 +121,24 @@ class MainActivity : AppCompatActivity() {
         for (key in json_object.keys()) {
             text_dictionary.put(key,json_object.getString(key))
             morse_dictionary.put(json_object.getString(key),key)
+        }*/
+    }
+
+    fun buildDictsWithJSON(jsonObj : JSONObject) {
+        for ( key in jsonObj.keys() ) {
+            val code : String = jsonObj[key] as String
+
+            text_dictionary.put(key,code)
+
+            morse_dictionary.put(code,key)
+
+            Log.d("log", "$key: $code")
+
         }
+    }
+
+    fun showCodes() {
+
     }
 
 }
