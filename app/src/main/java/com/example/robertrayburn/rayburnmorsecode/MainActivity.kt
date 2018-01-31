@@ -41,13 +41,16 @@ class MainActivity : AppCompatActivity() {
             hideKeyboard()
         }
 
-        //loadFile();
+        // Loads JSON file into JSON_OBJECT
         val jsonObj = loadMorseJSONFile();
 
+        // Stores key->value and value->key dictionary mappings.
         buildDictsWithJSON(jsonObj)
 
+        // Wires on button.
         codesButton.setOnClickListener{ _ ->
             mTextView.text = ""
+            // Prints the codes to screen.
             showCodes()
             hideKeyboard()
         }
