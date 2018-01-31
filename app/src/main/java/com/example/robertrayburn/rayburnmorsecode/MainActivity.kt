@@ -57,12 +57,20 @@ class MainActivity : AppCompatActivity() {
 
         transButton.setOnClickListener { _ ->
             mTextView.text = ""
-            appendTextAndScroll(inputText.text.toString().toUpperCase())
-            val transText = translateText(inputText.text.toString())
-            appendTextAndScroll(transText.toUpperCase())
+            val input = inputText.text.toString()
+
+            appendTextAndScroll(input.toUpperCase())
+
+            if (input.matches("(\\.|-|\\s/\\s|\\s)+".toRegex())) {
+                val transMorse = translateMorse(input)
+                appendTextAndScroll(transMorse.toUpperCase())
+            }
+            else {
+                val transText = translateText(input)
+                appendTextAndScroll(transText)
+            }
             hideKeyboard()
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -149,6 +157,21 @@ class MainActivity : AppCompatActivity() {
 
         return r
 
+    }
+
+    private fun translateMorse(input: String) : String {
+        var r = ""
+        val s = input.split("(\\s)+".toRegex())
+        Log.d("log", "Split stirng: $s")
+        for (item in s) {
+            if (item == "/") r += " "
+            else if (morse_dictionary.containsKey(item)) r += morse_dictionary[item]
+            else r += "[NA]"
+        }
+
+        Log.d("log", "Text: $r")
+
+        return r
     }
 
 }
