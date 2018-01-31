@@ -128,4 +128,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun translateText(input : String) {
+        val r = ""
+        for (c in input) {
+            if (c == ' ') r.plus("/ ")
+            else if (text_dictionary.containsKey(c.toString())) r.plus("${text_dictionary[c.toString()]} ")
+            else r.plus("? ")
+        }
+
+    }
+
 }
