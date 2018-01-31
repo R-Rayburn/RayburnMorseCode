@@ -18,8 +18,8 @@ import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
 
-    val text_dictionary : HashMap<String,String> = HashMap<String,String>()
-    val morse_dictionary : HashMap<String,String> = HashMap<String,String>()
+    private val text_dictionary : HashMap<String,String> = HashMap<String,String>()
+    private val morse_dictionary : HashMap<String,String> = HashMap<String,String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,9 +49,6 @@ class MainActivity : AppCompatActivity() {
         codesButton.setOnClickListener{ _ ->
             mTextView.text = ""
             showCodes()
-           /* for (key in text_dictionary.keys.sorted()) {
-                appendTextAndScroll(key.toUpperCase() + ": " + text_dictionary[key])
-            }*/
             hideKeyboard()
         }
 
@@ -96,7 +93,7 @@ class MainActivity : AppCompatActivity() {
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    fun loadMorseJSONFile() : JSONObject {
+    private fun loadMorseJSONFile() : JSONObject {
 
         val filePath = "morse.json"
 
@@ -106,25 +103,9 @@ class MainActivity : AppCompatActivity() {
 
         return jsonObj
 
-        // for loading json file into string.
-        // Discussed with Lukas Saul on getting this to work.
-        // Found example here: https://www.youtube.com/watch?v=o5pDghyRHmI
-        /*val jsonString: String = application.assets.open("morse.json").bufferedReader().use{
-            it.readText()
-        }
-
-        // Converting json stirng into json object
-        val json_object = JSONObject(jsonString)
-
-        // Storing key/value pairs into hashmaps.
-        // https://stackoverflow.com/questions/9151619/how-to-iterate-over-a-jsonobject
-        for (key in json_object.keys()) {
-            text_dictionary.put(key,json_object.getString(key))
-            morse_dictionary.put(json_object.getString(key),key)
-        }*/
     }
 
-    fun buildDictsWithJSON(jsonObj : JSONObject) {
+    private fun buildDictsWithJSON(jsonObj : JSONObject) {
         for ( key in jsonObj.keys() ) {
             val code : String = jsonObj[key] as String
 
@@ -137,7 +118,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun showCodes() {
+    private fun showCodes() {
         appendTextAndScroll("HERE ARE THE CODES")
         for (key in text_dictionary.keys.sorted()){
             appendTextAndScroll("${key.toUpperCase()}: ${text_dictionary[key]}")
