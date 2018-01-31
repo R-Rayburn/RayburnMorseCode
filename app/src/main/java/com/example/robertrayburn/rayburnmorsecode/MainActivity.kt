@@ -55,6 +55,14 @@ class MainActivity : AppCompatActivity() {
             hideKeyboard()
         }
 
+        transButton.setOnClickListener { _ ->
+            mTextView.text = ""
+            appendTextAndScroll(inputText.text.toString().toUpperCase())
+            val transText = translateText(inputText.text.toString())
+            appendTextAndScroll(transText.toUpperCase())
+            hideKeyboard()
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -128,13 +136,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun translateText(input : String) {
-        val r = ""
-        for (c in input) {
-            if (c == ' ') r.plus("/ ")
-            else if (text_dictionary.containsKey(c.toString())) r.plus("${text_dictionary[c.toString()]} ")
-            else r.plus("? ")
+    private fun translateText(input : String) : String {
+        var r = ""
+        val s = input.toLowerCase()
+        for (c in s) {
+            if (c == ' ') r += "/ "
+            else if (text_dictionary.containsKey(c.toString())) r += "${text_dictionary[c.toString()]} "
+            else r += "? "
         }
+
+        Log.d("log", "Morse: $r")
+
+        return r
 
     }
 
