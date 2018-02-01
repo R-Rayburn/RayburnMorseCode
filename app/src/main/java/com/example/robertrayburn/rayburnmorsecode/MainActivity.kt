@@ -2,7 +2,9 @@ package com.example.robertrayburn.rayburnmorsecode
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.text.method.ScrollingMovementMethod
@@ -61,7 +63,8 @@ class MainActivity : AppCompatActivity() {
 
             appendTextAndScroll(input.toUpperCase())
 
-            if (input.matches("(\\.|-|\\s/\\s|\\s)+".toRegex())) {
+            // Regex for exclusive Morse Code: [\.-]{1,5}(?> [\.-]{1,5})*(?> / [\.-]{1,5}(?> [\.-]{1,5})*)*
+            if (input.matches("(\\.|-|\\s/\\s|\\s)+".toRegex())) { //Old Regex: (\.|-|\s/\s|\s)+
                 val transMorse = translateMorse(input)
                 appendTextAndScroll(transMorse.toUpperCase())
             }
@@ -84,7 +87,11 @@ class MainActivity : AppCompatActivity() {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.action_settings -> {
+                val intent = Intent(this, SettingsActivity::class.java)
+                startActivity(intent)
+                return true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -94,7 +101,7 @@ class MainActivity : AppCompatActivity() {
             mTextView.append(text + "\n")
             val layout = mTextView.getLayout()
             if (layout != null) {
-                val scrollDelta = (layout!!.getLineBottom(  mTextView.getLineCount() - 1)
+                val scrollDelta = (layout.getLineBottom(  mTextView.getLineCount() - 1)
                         - mTextView.getScrollY() - mTextView.getHeight())
                 if (scrollDelta > 0)
                     mTextView.scrollBy( 0, scrollDelta)
@@ -157,6 +164,13 @@ class MainActivity : AppCompatActivity() {
 
         return r
 
+    }
+
+    fun isMorse(s: String) :Boolean {
+        for (c in s)
+            if (c != ' ' && c != '-' && c != '.' && c != '/')
+                return false
+        return true
     }
 
     private fun translateMorse(input: String) : String {
