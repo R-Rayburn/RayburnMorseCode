@@ -52,7 +52,7 @@
         android:layout_marginTop="12dp"
         android:background="#9ed3ff"
         android:fontFamily="monospace"
-        android:gravity="bottom"
+        android:gravity="left|center"
         android:scrollbars="vertical"
         android:textColor="@android:color/black"
         android:textSize="30sp"
