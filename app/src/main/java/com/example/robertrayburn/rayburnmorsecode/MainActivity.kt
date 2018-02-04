@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
             appendTextAndScroll(input.toUpperCase())
 
             // Regex for exclusive Morse Code: [\.-]{1,5}(?> [\.-]{1,5})*(?> / [\.-]{1,5}(?> [\.-]{1,5})*)*
-            if (input.matches("(\\.|-|\\s/\\s|\\s)+".toRegex())) { //Old Regex: (\.|-|\s/\s|\s)+
+            if (input.matches("(\\.|-|/|\\s)+".toRegex())) { //Old Regex: (\.|-|\s/\s|\s)+
                 val transMorse = translateMorse(input)
                 appendTextAndScroll(transMorse.toUpperCase())
             }
@@ -179,8 +179,9 @@ class MainActivity : AppCompatActivity() {
         Log.d("log", "Split stirng: $s")
         for (item in s) {
             if (item == "/") r += " "
+            else if (item == "") r += ""
             else if (morse_dictionary.containsKey(item)) r += morse_dictionary[item]
-            else r += "[NA]"
+            else r += 248.toChar().toString() //The value 248 is the lowercase value of the empty set symbol. "[NA]"
         }
 
         Log.d("log", "Text: $r")
