@@ -3,12 +3,12 @@
     <!-- NOTE: EditTextPreference accepts EditText attributes. -->
     <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
     <EditTextPreference
-        android:defaultValue="33"
-        android:inputType="textCapWords"
-        android:key="morse_speed"
+        android:defaultValue="550"
+        android:inputType="number"
+        android:key="morse_pitch"
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:title="Morse Speed" />
+        android:title="Morse Pitch" />
 
 </PreferenceScreen>

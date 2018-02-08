@@ -8,7 +8,7 @@
         android:title="@string/pref_header_general" />
 
     <header
-        android:fragment="com.example.robertrayburn.rayburnmorsecode.SettingsActivity$GeneralPreferenceFragment"
+        android:fragment="com.example.robertrayburn.rayburnmorsecode.SettingsActivity$MorsePreferenceFragment"
         android:icon="@drawable/ic_info_black_24dp"
         android:title="Morse code" />
 
