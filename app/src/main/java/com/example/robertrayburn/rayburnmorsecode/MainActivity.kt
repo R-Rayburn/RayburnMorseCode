@@ -3,10 +3,12 @@ package com.example.robertrayburn.rayburnmorsecode
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
 import android.os.Bundle
+import android.preference.PreferenceManager.getDefaultSharedPreferences
 import android.provider.Settings
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
@@ -30,8 +32,12 @@ class MainActivity : AppCompatActivity() {
     private val text_dictionary : HashMap<String,String> = HashMap<String,String>()
     private val morse_dictionary : HashMap<String,String> = HashMap<String,String>()
 
+    var prefs: SharedPreferences? = null
+    //var morsePitch : Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        prefs = getDefaultSharedPreferences(this.applicationContext)
+        //morsePitch = prefs!!.getString("morse_pitch", "550").toInt()
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
@@ -86,6 +92,9 @@ class MainActivity : AppCompatActivity() {
             val input = inputText.text.toString()
             playString(translateText(input),0)
         }
+
+        //val dotSoundBuffer:ShortArray = genSineWaveSoundBuffer(morsePitch.toDouble(), dotLength) //freq: 550.0
+        //val dashSoundBuffer:ShortArray = genSineWaveSoundBuffer(morsePitch.toDouble(), dashLength)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -226,7 +235,9 @@ class MainActivity : AppCompatActivity() {
     val dotLength:Int = 50
     val dashLength:Int = dotLength*3
 
-    val dotSoundBuffer:ShortArray = genSineWaveSoundBuffer(550.0, dotLength)
+    //val morsePitch = prefs!!.getString("morse_pitch", "550").toInt()
+    // Put in oncreate and set these to null.
+    val dotSoundBuffer: ShortArray = genSineWaveSoundBuffer(550.0, dotLength) //freq: 550.0
     val dashSoundBuffer:ShortArray = genSineWaveSoundBuffer(550.0, dashLength)
 
     fun playDash(onDone:()->Unit={}){
