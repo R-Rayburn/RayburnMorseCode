@@ -79,4 +79,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inputText" />
 
+    <ImageButton
+        android:id="@+id/playButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:tint="@android:color/holo_red_dark"
+        app:layout_constraintStart_toEndOf="@+id/transButton"
+        app:layout_constraintTop_toBottomOf="@+id/inputText"
+        app:srcCompat="@android:drawable/ic_media_play" />
+
 </android.support.constraint.ConstraintLayout>

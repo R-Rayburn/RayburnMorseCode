@@ -3,6 +3,9 @@ package com.example.robertrayburn.rayburnmorsecode
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.media.AudioFormat
+import android.media.AudioManager
+import android.media.AudioTrack
 import android.os.Bundle
 import android.provider.Settings
 import android.support.design.widget.Snackbar
@@ -77,6 +80,11 @@ class MainActivity : AppCompatActivity() {
                 appendTextAndScroll(transText)
             }
             hideKeyboard()
+        }
+
+        playButton.setOnClickListener { _ ->
+            val input = inputText.text.toString()
+            playString(translateText(input),0)
         }
     }
 
@@ -170,6 +178,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    // Remove this.
     fun isMorse(s: String) :Boolean {
         for (c in s)
             if (c != ' ' && c != '-' && c != '.' && c != '/')
@@ -235,7 +244,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun genSineWaveSoundBuffer(frequency:Double, durationMSec: Int):ShortArray{
-        val duration : Int = round((durationMSec/1000.0) * SAMPLE_RATE).toInt()
+        val duration : Int = Math.round((durationMSec/1000.0) * SAMPLE_RATE).toInt()
 
         var mSound: Double
         val mBuffer = ShortArray(duration)
@@ -248,7 +257,36 @@ class MainActivity : AppCompatActivity() {
 
     private fun playSoundBuffer (mBuffer: ShortArray, onDone: () -> Unit={ }){
         var minBufferSize = SAMPLE_RATE/10
+        if ( minBufferSize < mBuffer.size) {
+            minBufferSize = minBufferSize + minBufferSize *
+                    ( Math.round( mBuffer.size.toFloat() ) / minBufferSize.toFloat() ).toInt()
+        }
 
+        val nBuffer = ShortArray(minBufferSize)
+        for (i in nBuffer.indices) {
+            if (i < mBuffer.size)
+                nBuffer[i] = mBuffer[i]
+            else
+                nBuffer[i] = 0
+        }
+
+        val mAudioTrack = AudioTrack(AudioManager.STREAM_MUSIC, SAMPLE_RATE,
+                AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT,
+                minBufferSize, AudioTrack.MODE_STREAM)
+
+        mAudioTrack.setStereoVolume(AudioTrack.getMaxVolume(), AudioTrack.getMaxVolume())
+        mAudioTrack.setNotificationMarkerPosition(mBuffer.size)
+        mAudioTrack.setPlaybackPositionUpdateListener(object : AudioTrack.OnPlaybackPositionUpdateListener {
+            override fun onPeriodicNotification(track: AudioTrack){}
+            override fun onMarkerReached(track: AudioTrack?) {
+                Log.d("Log", "Audio track end of file reached...")
+                mAudioTrack.stop()
+                mAudioTrack.release()
+                onDone()
+            }
+        })
+        mAudioTrack.play()
+        mAudioTrack.write(nBuffer, 0, minBufferSize)
     }
 
 }
