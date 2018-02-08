@@ -20,6 +20,8 @@ import org.json.JSONObject
 import java.util.*
 import kotlin.concurrent.timerTask
 
+val SAMPLE_RATE = 44100
+
 class MainActivity : AppCompatActivity() {
 
     private val text_dictionary : HashMap<String,String> = HashMap<String,String>()
@@ -244,6 +246,9 @@ class MainActivity : AppCompatActivity() {
         return mBuffer
     }
 
-    private fun playSoundBuffer
+    private fun playSoundBuffer (mBuffer: ShortArray, onDone: () -> Unit={ }){
+        var minBufferSize = SAMPLE_RATE/10
+
+    }
 
 }
