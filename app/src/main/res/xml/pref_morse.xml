@@ -11,4 +11,22 @@
         android:singleLine="true"
         android:title="Morse Pitch" />
 
+    <EditTextPreference
+        android:defaultValue="5"
+        android:inputType="number"
+        android:key="morse_speed"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Morse Speed" />
+
+    <EditTextPreference
+        android:defaultValue="13"
+        android:inputType="number"
+        android:key="farnsworth_speed"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="Farnsworth Speed" />
+
 </PreferenceScreen>

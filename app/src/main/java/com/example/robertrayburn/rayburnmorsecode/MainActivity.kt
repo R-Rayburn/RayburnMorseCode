@@ -90,14 +90,14 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        val dotLength:Int = 50
+        val dotLength = (1200/prefs!!.getString("morse_speed", "20").toInt()) //(18.462 * prefs!!.getString("morse_speed", "5").toInt()).toInt()
         val dashLength:Int = dotLength*3
-
+        val farnsworth = (1200/prefs!!.getString("farnsworth_speed", "10").toInt())
         val morsePitch = prefs!!.getString("morse_pitch", "550").toInt()
 
         //val morseSpeed = prefs!!.getString("morse_speed", "50").toInt()
         // Put in oncreate and set these to null.
-        val dotSoundBuffer: ShortArray = genSineWaveSoundBuffer(morsePitch.toDouble(), dotLength) //freq: 550.0
+        val dotSoundBuffer: ShortArray = genSineWaveSoundBuffer(morsePitch.toDouble(), dotLength)
         val dashSoundBuffer:ShortArray = genSineWaveSoundBuffer(morsePitch.toDouble(), dashLength)
 
         fun pause(durationMSec:Int, onDone: () -> Unit={}){
@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity() {
         fun playString(s:String, i: Int = 0) : Unit {
             if (i>s.length-1)
                 return;
-            var mDelay: Long = 0;
+            //var mDelay: Long = 0;
 
             var thenFun: () -> Unit = { ->
                 this@MainActivity.runOnUiThread(java.lang.Runnable {playString(s, i+1)})
@@ -133,9 +133,9 @@ class MainActivity : AppCompatActivity() {
             else if (c=='-')
                 playDash(thenFun)
             else if (c=='/')
-                pause(6*dotLength, thenFun)
+                pause(6*farnsworth, thenFun) //6*dotLength
             else if (c==' ')
-                pause(2*dotLength, thenFun)
+                pause(2*farnsworth, thenFun)//2*dotLength
         }
 
         playButton.setOnClickListener { _ ->
