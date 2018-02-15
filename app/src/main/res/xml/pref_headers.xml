@@ -3,14 +3,14 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
+        android:fragment="com.example.robertrayburn.rayburnmorsecode.SettingsActivity$MorsePreferenceFragment"
+        android:icon="@drawable/ic_info_black_24dp"
+        android:title="Morse Code" />
+
+    <header
         android:fragment="com.example.robertrayburn.rayburnmorsecode.SettingsActivity$GeneralPreferenceFragment"
         android:icon="@drawable/ic_info_black_24dp"
         android:title="@string/pref_header_general" />
-
-    <header
-        android:fragment="com.example.robertrayburn.rayburnmorsecode.SettingsActivity$MorsePreferenceFragment"
-        android:icon="@drawable/ic_info_black_24dp"
-        android:title="Morse code" />
 
     <header
         android:fragment="com.example.robertrayburn.rayburnmorsecode.SettingsActivity$NotificationPreferenceFragment"

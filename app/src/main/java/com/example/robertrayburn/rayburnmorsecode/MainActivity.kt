@@ -88,11 +88,60 @@ class MainActivity : AppCompatActivity() {
             hideKeyboard()
         }
 
+
+
+        val dotLength:Int = 50
+        val dashLength:Int = dotLength*3
+
+        val morsePitch = prefs!!.getString("morse_pitch", "550").toInt()
+
+        //val morseSpeed = prefs!!.getString("morse_speed", "50").toInt()
+        // Put in oncreate and set these to null.
+        val dotSoundBuffer: ShortArray = genSineWaveSoundBuffer(morsePitch.toDouble(), dotLength) //freq: 550.0
+        val dashSoundBuffer:ShortArray = genSineWaveSoundBuffer(morsePitch.toDouble(), dashLength)
+
+        fun pause(durationMSec:Int, onDone: () -> Unit={}){
+            Log.d("DEBUG", "pause: ${durationMSec}")
+            Timer().schedule(timerTask { onDone()  }, durationMSec.toLong())
+        }
+
+        fun playDash(onDone:()->Unit={}){
+            Log.d("DEBUG", "playDash")
+            playSoundBuffer(dashSoundBuffer,{->pause(dotLength, onDone)})
+        }
+        fun playDot(onDone: () -> Unit={}){
+            Log.d("DEBUG", "playDot")
+            playSoundBuffer(dotSoundBuffer,{ -> pause(dotLength, onDone)})
+        }
+
+
+
+
+        fun playString(s:String, i: Int = 0) : Unit {
+            if (i>s.length-1)
+                return;
+            var mDelay: Long = 0;
+
+            var thenFun: () -> Unit = { ->
+                this@MainActivity.runOnUiThread(java.lang.Runnable {playString(s, i+1)})
+            }
+
+            var c = s[i]
+            Log.d("Log", "Processing pos: " + i + " char: [" + c + "]")
+            if (c=='.')
+                playDot(thenFun)
+            else if (c=='-')
+                playDash(thenFun)
+            else if (c=='/')
+                pause(6*dotLength, thenFun)
+            else if (c==' ')
+                pause(2*dotLength, thenFun)
+        }
+
         playButton.setOnClickListener { _ ->
             val input = inputText.text.toString()
             playString(translateText(input),0)
         }
-
         //val dotSoundBuffer:ShortArray = genSineWaveSoundBuffer(morsePitch.toDouble(), dotLength) //freq: 550.0
         //val dashSoundBuffer:ShortArray = genSineWaveSoundBuffer(morsePitch.toDouble(), dashLength)
     }
@@ -211,48 +260,7 @@ class MainActivity : AppCompatActivity() {
         return r
     }
 
-    fun playString(s:String, i: Int = 0) : Unit {
-        if (i>s.length-1)
-            return;
-        var mDelay: Long = 0;
 
-        var thenFun: () -> Unit = { ->
-            this@MainActivity.runOnUiThread(java.lang.Runnable {playString(s, i+1)})
-        }
-
-        var c = s[i]
-        Log.d("Log", "Processing pos: " + i + " char: [" + c + "]")
-        if (c=='.')
-            playDot(thenFun)
-        else if (c=='-')
-            playDash(thenFun)
-        else if (c=='/')
-            pause(6*dotLength, thenFun)
-        else if (c==' ')
-            pause(2*dotLength, thenFun)
-    }
-
-    val dotLength:Int = 50
-    val dashLength:Int = dotLength*3
-
-    //val morsePitch = prefs!!.getString("morse_pitch", "550").toInt()
-    // Put in oncreate and set these to null.
-    val dotSoundBuffer: ShortArray = genSineWaveSoundBuffer(550.0, dotLength) //freq: 550.0
-    val dashSoundBuffer:ShortArray = genSineWaveSoundBuffer(550.0, dashLength)
-
-    fun playDash(onDone:()->Unit={}){
-        Log.d("DEBUG", "playDash")
-        playSoundBuffer(dashSoundBuffer,{->pause(dotLength, onDone)})
-    }
-    fun playDot(onDone: () -> Unit={}){
-        Log.d("DEBUG", "playDot")
-        playSoundBuffer(dotSoundBuffer,{ -> pause(dotLength, onDone)})
-    }
-
-    fun pause(durationMSec:Int, onDone: () -> Unit={}){
-        Log.d("DEBUG", "pause: ${durationMSec}")
-        Timer().schedule(timerTask { onDone()  }, durationMSec.toLong())
-    }
 
     private fun genSineWaveSoundBuffer(frequency:Double, durationMSec: Int):ShortArray{
         val duration : Int = Math.round((durationMSec/1000.0) * SAMPLE_RATE).toInt()
