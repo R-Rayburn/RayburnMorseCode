@@ -1,5 +1,6 @@
 package com.example.robertrayburn.rayburnmorsecode
 
+import android.Manifest.permission_group.SMS
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -18,10 +19,16 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import com.ajts.unifiedsmslibrary.Callback.SMSCallback
+import com.ajts.unifiedsmslibrary.SMS
+import com.ajts.unifiedsmslibrary.Services.Twilio
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import okhttp3.Call
+import okhttp3.Response
 import org.json.JSONObject
+import java.lang.Exception
 import java.util.*
 import kotlin.concurrent.timerTask
 
@@ -42,8 +49,22 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+            val input = inputText.text.toString()
+
+            //appendTextAndScroll(input.toUpperCase())
+
+            // Regex for exclusive Morse Code: [\.-]{1,5}(?> [\.-]{1,5})*(?> / [\.-]{1,5}(?> [\.-]{1,5})*)*
+            if (input.matches("(\\.|-|/|\\s)+".toRegex())) { //Old Regex: (\.|-|\s/\s|\s)+
+                val transMorse = translateMorse(input)
+                doTwilioSend(transMorse, R.string.toNumber.toString())
+                //appendTextAndScroll(transMorse.toUpperCase())
+            }
+            else {
+                val transText = translateText(input)
+                doTwilioSend(transText, R.string.toNumber.toString())
+                //appendTextAndScroll(transText)
+            }
+            //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show()
         }
 
         // Needed for scrolling.
@@ -147,9 +168,47 @@ class MainActivity : AppCompatActivity() {
 
 
 
-
-
     }
+
+
+
+    private fun doTwilioSend(message: String, toPhoneNum: String){
+        // IF YOU HAVE A PUBLIC GIT, DO NOT, DO NOT, PUT YOUR TWILIO SID/TOKENs HERE
+        // AND DO NOT CHECK IT INTO GIT!!!
+        // Once you check it into a PUBLIC git, it is there for ever and will be stolen.
+        // Move them to a JSON file that is in the .gitignore
+        // Or make them a user setting, that the user would enter
+        // In a real app, move the twilio  parts to a server, so that it cannot be stolen.
+        //
+        val twilio_account_sid = R.string.twillo_account_sid
+        val twilio_auth_token = R.string.twillo_auth_token
+        val fromTwilioNum = R.string.fromTwilloNumber
+
+        val senderName    = fromTwilioNum.toString()  // ??
+
+        val sms = SMS();
+        val twilio = Twilio(twilio_account_sid.toString(), twilio_auth_token.toString())
+
+        // This code was converted from Java to Kotlin
+        //  and then it had to have its parameter types changed before it would work
+        sms.sendSMS(twilio, senderName, toPhoneNum, message, object : SMSCallback {
+            override fun onResponse(call: Call?, response: Response?) {
+                Log.v("twilio", response.toString())
+                showSnack(response.toString())
+            }
+            override fun onFailure(call: Call?, e: Exception?) {
+                Log.v("twilio", e.toString())
+                showSnack(e.toString())
+            }
+        })
+    }
+
+    // helper function to show a quick notice
+    fun showSnack(s:String) {
+        Snackbar.make(this.findViewById(android.R.id.content), s, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
