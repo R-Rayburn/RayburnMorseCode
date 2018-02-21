@@ -180,14 +180,14 @@ class MainActivity : AppCompatActivity() {
         // Or make them a user setting, that the user would enter
         // In a real app, move the twilio  parts to a server, so that it cannot be stolen.
         //
-        val twilio_account_sid = R.string.twillo_account_sid
-        val twilio_auth_token = R.string.twillo_auth_token
-        val fromTwilioNum = R.string.fromTwilloNumber
-
-        val senderName    = fromTwilioNum.toString()  // ??
+        val twilioAccountSid = "" //Twilio Account sID goes here.
+        val twilioAuthToken = "" //Twilio Authorization Token goes here.
+        val fromTwilioNum = "" //Twilio number
+        val toPhoneNum = "" //Phone to send to.
+        val senderName    = fromTwilioNum  // ??
 
         val sms = SMS();
-        val twilio = Twilio(twilio_account_sid.toString(), twilio_auth_token.toString())
+        val twilio = Twilio(twilioAccountSid.toString(), twilioAuthToken.toString())
 
         // This code was converted from Java to Kotlin
         //  and then it had to have its parameter types changed before it would work
